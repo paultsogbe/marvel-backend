@@ -1,33 +1,37 @@
+// PACKAGES IMPORT & INIT.
+require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
+const formidable = require("express-formidable");
 const mongoose = require("mongoose");
-const formidableMiddleware = require("express-formidable");
-var cors = require("cors");
 
 const app = express();
-require("dotenv").config();
-
-app.use(formidableMiddleware());
 app.use(cors());
+app.use(formidable());
 
+// CONNECTION TO MONGODB
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
 });
 
-const marvelRoutes = require("./routes/marvel");
+// ROUTES IMPORT
+const comicsRoutes = require("./routes/comics");
+app.use(comicsRoutes);
+
+const charactersRoutes = require("./routes/characters");
+app.use(charactersRoutes);
+
 const userRoutes = require("./routes/user");
-const searchRoutes = require("./routes/search");
-app.use(marvelRoutes);
 app.use(userRoutes);
-app.use(searchRoutes);
 
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome on Marvel API" });
-});
-
+// WRONG ROUTES
 app.all("*", (req, res) => {
-  res.json({ message: "this page does not exist" });
+  res.status(404).json({ error: "Page not found" });
 });
 
-app.listen(process.env.PORT, () => console.log("Server started"));
+// SERVER
+app.listen(process.env.PORT || 3100, () => {
+  console.log("Server started");
+});
