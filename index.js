@@ -1,11 +1,12 @@
-require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const formidable = require("express-formidable");
-const cors = require("cors");
+const formidableMiddleware = require("express-formidable");
+var cors = require("cors");
 
 const app = express();
-app.use(formidable());
+require("dotenv").config();
+
+app.use(formidableMiddleware());
 app.use(cors());
 
 mongoose.connect(process.env.MONGODB_URI, {
@@ -14,21 +15,19 @@ mongoose.connect(process.env.MONGODB_URI, {
   useCreateIndex: true,
 });
 
-// import des routes
-const comicRoutes = require("./routes/comic");
-const characterRoutes = require("./routes/character");
-app.use(comicRoutes);
-app.use(characterRoutes);
+const marvelRoutes = require("./routes/marvel");
+const userRoutes = require("./routes/user");
+const searchRoutes = require("./routes/search");
+app.use(marvelRoutes);
+app.use(userRoutes);
+app.use(searchRoutes);
 
 app.get("/", (req, res) => {
-  res.json({ message: "Hi" });
+  res.json({ message: "Welcome on Marvel API" });
 });
 
-app.all("*", function (req, res) {
-  res.json({ message: "Page not found" });
+app.all("*", (req, res) => {
+  res.json({ message: "this page does not exist" });
 });
 
-const server = app.listen(process.env.PORT, () => {
-  console.log("Server has started");
-});
-server.timeout = Number(process.env.SERVER_TIMEOUT) || 1000000;
+app.listen(process.env.PORT, () => console.log("Server started"));
