@@ -15,7 +15,7 @@ router.get("/search/characters", async (req, res) => {
     let name = req.query.name;
 
     const response = await axios.get(
-      `http://gateway.marvel.com/v1/public/characters?offset=${offset}&limit=100&nameStartsWith=${name}&ts=${ts}&apikey=${process.env.MARVEL_PUBLIC_API_KEY}&hash=${hash}`
+      `https://lereacteur-marvel-api.herokuapp.com/characters?offset=${offset}&limit=100&nameStartsWith=${name}&ts=${ts}&apikey=${process.env.MARVEL_PUBLIC_API_KEY}&hash=${hash}`
     );
 
     res.json(response.data);
@@ -35,7 +35,7 @@ router.get("/search/comics", async (req, res) => {
     let title = req.query.title;
 
     const response = await axios.get(
-      `http://gateway.marvel.com/v1/public/comics?offset=${offset}&limit=100&titleStartsWith=${title}&ts=${ts}&apikey=${process.env.MARVEL_PUBLIC_API_KEY}&hash=${hash}`
+      `https://lereacteur-marvel-api.herokuapp.com/comics?offset=${offset}&limit=100&titleStartsWith=${title}&ts=${ts}&apikey=${process.env.MARVEL_PUBLIC_API_KEY}&hash=${hash}`
     );
 
     res.json(response.data);
