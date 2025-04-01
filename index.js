@@ -10,11 +10,15 @@ app.use(cors());
 app.use(formidable());
 
 // CONNECTION TO MONGODB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
+const mongoUri = process.env.MONGO_URI; // Get the connection string from .env
+if (!mongoUri) {
+  throw new Error("MONGO_URI is not defined in the environment variables");
+}
+
+mongoose
+  .connect(mongoUri)
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("Failed to connect to MongoDB", err));
 
 // ROUTES IMPORT
 const comicsRoutes = require("./routes/comics");
